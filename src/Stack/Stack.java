@@ -7,12 +7,14 @@ package Stack;
  */
 public class Stack<T> {
 
-    private Node top = new Node(null);
-
+    private Node <T> top = new Node<>(null);
+    private int size = 0;
+    
     public void push(T data) {
         Node toAdd = new Node(data);
         toAdd.next = top.next;
         top.next = toAdd;
+        size++;
     }
 
     public T pop() {
@@ -22,7 +24,8 @@ public class Stack<T> {
         } else {
             top.next = null;
         }
-
+        size--;
+        
         return data;
     }
 
@@ -33,11 +36,16 @@ public class Stack<T> {
     public boolean isEmpty() {
         return top.next == null;
     }
+    
+    public int size()
+    {
+        return size;
+    }
 
     public class Node<T> {
 
         private T data;
-        public Node next;
+        public Node <T> next;
 
         public Node(T data) {
             this.data = data;
@@ -52,6 +60,20 @@ public class Stack<T> {
             this.data = data;
         }
 
+    }
+    
+    @Override
+    public String toString()
+    {
+        String ans = "";
+        Node <T> curr = top.next;
+        while (curr != null)
+        {
+            ans += curr.getData() + "\n";
+            curr = curr.next;
+        }
+        
+        return ans;
     }
 
 }

@@ -16,15 +16,35 @@ public class Action {
     private ActionType type;
 
     public Action(int x, int y, boolean[] numberArr, boolean isNote, ActionType type) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
         setNumberArr(numberArr);
-        this.isNote = isNote;
-        this.type = type;
+        setIsNote(isNote);
+        setType(type);
+    }
+    
+    public Action(int x, int y, boolean isNote, ActionType type) {
+        setX(x);
+        setY(y);
+        setIsNote(isNote);
+        setType(type);
+    }
+    
+    public Action(int x, int y, int ind, boolean value, boolean isNote, ActionType type) {
+        setX(x);
+        setY(y);
+        setNumber(ind, value);
+        setIsNote(isNote);
+        setType(type);
+    }
+    
+    public Action()
+    {
+        this(-1, -1, new boolean[10], false, null);
     }
 
     public static enum ActionType {
-        ADD, DELETE, DELETE_CELL
+        ADD, DELETE_NUMBER, DELETE_CELL
     }
 
     // <editor-fold defaultstate="collapsed" desc="getters and setters">
@@ -33,6 +53,11 @@ public class Action {
         for (int i = 0; i < numberArr.length; i++) {
             this.numberArr[i] = numberArr[i];
         }
+    }
+    
+    public void setNumber(int ind, boolean value)
+    {
+        numberArr[ind] = value;
     }
     
     public boolean[] getNumberArr()
@@ -55,8 +80,14 @@ public class Action {
     public void setY(int y) {
         this.y = y;
     }
+    
+    public void setPosition(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 
-    public boolean isIsNote() {
+    public boolean isNote() {
         return isNote;
     }
 
@@ -73,4 +104,16 @@ public class Action {
     }
     // </editor-fold>
 
+    @Override
+    public String toString()
+    {
+        String array = "";
+        for (boolean b : getNumberArr())
+        {
+            array += b + " ";
+        }
+        return String.format("Action type:%s\nPosition: %d, %d\nIs note: %b\nNumber array: %s",
+                this.type == ActionType.ADD ? "ADD" : this.type == ActionType.DELETE_CELL ? "DELETE_CELL" : "DELETE_NUMBER",
+                getX(), getY(), isNote(), array);
+    }
 }
