@@ -107,11 +107,13 @@ public class Action {
     @Override
     public String toString()
     {
-        String array = "";
+        String array = "[";
+        int i = 0;
         for (boolean b : getNumberArr())
         {
-            array += b + " ";
+            array += i++ + ": " + (b ? "T" : "F") + ", ";
         }
+        array += "]";
         return String.format("Action type:%s\nPosition: %d, %d\nIs note: %b\nNumber array: %s",
                 this.type == ActionType.ADD ? "ADD" : this.type == ActionType.DELETE_CELL ? "DELETE_CELL" : "DELETE_NUMBER",
                 getX(), getY(), isNote(), array);
