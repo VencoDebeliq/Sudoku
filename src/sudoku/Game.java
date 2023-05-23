@@ -186,7 +186,7 @@ public class Game extends javax.swing.JFrame
         if (selectedFieldX == -1 || selectedFieldY == -1) return;
         if (field[selectedFieldY][selectedFieldX].getComponentCount() == 1) return;
         
-        boolean isNote = true;
+        boolean isNote = false;
         int number = 0;
         
         JLabel eraseLabel = new JLabel();
@@ -220,7 +220,56 @@ public class Game extends javax.swing.JFrame
     }//GEN-LAST:event_btnEraseActionPerformed
 
     private void btnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUndoActionPerformed
+        if (actions.isEmpty()) return;
         System.out.println(actions);
+        Action action = actions.peek();
+        int x = action.getX();
+        int y = action.getY();
+        if (action.getType() == Action.ActionType.ADD)
+        {
+            if (action.isNote())
+            {
+                int i = 0;
+                int number = 0;
+                for (boolean b: action.getNumberArr())
+                {
+                    if (b)
+                        number = i;
+                    ++i;
+                }
+                Component c = field[y][x].getComponent(number);
+                c.setVisible(false);
+            }
+            else
+            {
+                JLabel num = (JLabel)(field[y][x].getComponent(0));
+                num.setText("");
+                sudoku.setNumberAt(y, x, 0);
+            }
+        }
+        else if (action.getType() == Action.ActionType.DELETE_CELL)
+        {  
+            boolean[] numbers = action.getNumberArr();
+            for (int i = 0; i < numbers.length; ++i)
+            {
+                if (numbers[i])
+                {
+                    if (!action.isNote())
+                    {
+                        ((JLabel)field[y][x].getComponent(0)).setText(i + "");
+                        if (!sudoku.isPlaceable(sudoku.getGrid(), x, y, i))
+                            ((JLabel)field[y][x].getComponent(0)).setForeground(Color.red);
+                        sudoku.setNumberAt(y, x, i);
+                    }
+                    field[y][x].getComponent(0).setVisible(true);
+                }
+            }
+        }
+        else
+        {
+            
+        }
+        actions.pop();
     }//GEN-LAST:event_btnUndoActionPerformed
 
     /*
