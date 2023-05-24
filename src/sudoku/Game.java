@@ -221,7 +221,6 @@ public class Game extends javax.swing.JFrame
 
     private void btnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUndoActionPerformed
         if (actions.isEmpty()) return;
-        System.out.println(actions);
         Action action = actions.peek();
         int x = action.getX();
         int y = action.getY();
@@ -244,6 +243,7 @@ public class Game extends javax.swing.JFrame
             {
                 JLabel num = (JLabel)(field[y][x].getComponent(0));
                 num.setText("");
+                num.setForeground(Color.black);
                 sudoku.setNumberAt(y, x, 0);
             }
         }
@@ -261,15 +261,40 @@ public class Game extends javax.swing.JFrame
                             ((JLabel)field[y][x].getComponent(0)).setForeground(Color.red);
                         sudoku.setNumberAt(y, x, i);
                     }
-                    field[y][x].getComponent(0).setVisible(true);
+                    field[y][x].getComponent(i).setVisible(true);
                 }
             }
         }
-        else
+        else if (action.getType() == Action.ActionType.DELETE_NUMBER)
         {
-            
+            if (action.isNote())
+            {
+                int i = 0;
+                int number = 0;
+                for (boolean b: action.getNumberArr())
+                {
+                    if (b) number = i;
+                    ++i;
+                }
+                field[y][x].getComponent(number).setVisible(true);
+            }
+            else
+            {
+                sudoku.setNumberAt(y, x, 0);
+                JLabel num = (JLabel)field[y][x].getComponent(0);
+                num.setText("");
+                boolean[] numbers = action.getNumberArr();
+                for (int i = 0; i < numbers.length; ++i)
+                {
+                    if (numbers[i])
+                    {
+                        field[y][x].getComponent(i).setVisible(true);
+                    }
+                }
+            }
         }
         actions.pop();
+        unselect();
     }//GEN-LAST:event_btnUndoActionPerformed
 
     /*
@@ -494,9 +519,18 @@ public class Game extends javax.swing.JFrame
         if (sudoku.getNumberAt(selectedFieldY, selectedFieldX) != 0) return;
         if (lblNotes.getText().equals("Off"))
         {
+            Action.ActionType actionT = Action.ActionType.ADD;
+            boolean[] arr = new boolean[10];
+            int i = 0;
             for (Component comp: field[selectedFieldY][selectedFieldX].getComponents())
             {
+                if (comp.isVisible() && i != 0)
+                {
+                    actionT = Action.ActionType.DELETE_NUMBER;
+                    arr[i] = true;
+                }
                 comp.setVisible(false);
+                i++;
             }
             javax.swing.JLabel number = (javax.swing.JLabel)field[selectedFieldY][selectedFieldX].getComponent(0);
             number.setText(c + "");
@@ -504,8 +538,18 @@ public class Game extends javax.swing.JFrame
             if (!sudoku.isPlaceable(sudoku.getGrid(), selectedFieldX, selectedFieldY, (c - '0')))
                 number.setForeground(Color.red);
             sudoku.setNumberAt(selectedFieldY, selectedFieldX, Integer.parseInt(c + ""));
-            actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                false, Action.ActionType.ADD));
+            
+            if (actionT == Action.ActionType.ADD)
+            {
+                actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
+                        false, Action.ActionType.ADD));
+            }
+            else
+            {
+                actions.push(new Action(selectedFieldX, selectedFieldY, arr,
+                        false, Action.ActionType.DELETE_NUMBER));
+            }
+            
             unselect();
             checkIfWon();
         }
@@ -525,7 +569,6 @@ public class Game extends javax.swing.JFrame
                 true, Action.ActionType.ADD));
             }
         }
-        //System.out.println(actions);
     }
 
     /**
