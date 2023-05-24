@@ -5,12 +5,13 @@
 package Sort;
 
 import java.util.*;
+import Data.Data;
 
 /**
  *
  * @author ventsislavlp
  */
-public class Heap <T extends Integer>
+public class Heap <T extends Data>
 {
     private Node <T> tree = new Node<>();
     private int size = 0;
@@ -47,7 +48,7 @@ public class Heap <T extends Integer>
         
         Node <T> next = pickAWay(curr);
         addPerform(value, next);
-        if (next.getValue() > curr.getValue())
+        if (next.getValue().getScore() > curr.getValue().getScore())
         {
             T cp = next.getValue();
             next.setValue(curr.getValue());
@@ -84,7 +85,7 @@ public class Heap <T extends Integer>
             return;
         }
         Node <T> max = 
-                (curr.getLeft().getValue() > curr.getRight().getValue()
+                (curr.getLeft().getValue().getScore() > curr.getRight().getValue().getScore()
                 ? curr.getLeft() 
                 : curr.getRight());
         curr.setValue(max.getValue());
@@ -101,7 +102,7 @@ public class Heap <T extends Integer>
         return leftOrRight ? p.getLeft() : p.getRight();
     }
     
-    public static <P extends Integer> Object[] sorted(Heap <P> h)
+    public static <P extends Data> Object[] sorted(Heap <P> h)
     {
         Object arr[] = new Object[h.size()];
         int i = 0;

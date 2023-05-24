@@ -50,6 +50,7 @@ public class Action {
     // <editor-fold defaultstate="collapsed" desc="getters and setters">
     public void setNumberArr(boolean[] numberArr)
     {
+        if (numberArr.length != 10) return;
         for (int i = 0; i < numberArr.length; i++) {
             this.numberArr[i] = numberArr[i];
         }
@@ -57,6 +58,7 @@ public class Action {
     
     public void setNumber(int ind, boolean value)
     {
+        if (ind < 0 || ind > 9) return;
         numberArr[ind] = value;
     }
     
@@ -70,6 +72,7 @@ public class Action {
     }
 
     public void setX(int x) {
+        if (x < 0) return;
         this.x = x;
     }
 
@@ -78,11 +81,13 @@ public class Action {
     }
 
     public void setY(int y) {
+        if (y < 0) return;
         this.y = y;
     }
     
     public void setPosition(int x, int y)
     {
+        if (x < 0 || y < 0) return;
         this.x = x;
         this.y = y;
     }
