@@ -9,12 +9,9 @@ import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 /**
@@ -23,32 +20,21 @@ import javax.swing.WindowConstants;
  */
 public class EndScreen extends javax.swing.JFrame {
 
-    /**
-     * Creates new form EndScreen
-     */
-    private JTextArea scoreboard = new JTextArea();
     private String scoreboardText = "";
+
     public EndScreen() {
         initComponents();
-        this.setBounds(100, 50, 500, 600);
         this.setResizable(false);
         this.revalidate();
         setLocationRelativeTo(null);
-        
-        scoreboard.setBounds(100, 100, 300, 300);
+
         scoreboard.setEditable(false);
         scoreboard.setColumns(10);
         scoreboard.setOpaque(true);
         scoreboard.setForeground(Color.black);
         scoreboard.setFont(new Font("Fira Sans", Font.BOLD, 13));
-        this.add(scoreboard);
-        this.revalidate();
-        try {
-            scoreboardDisplayer();
-        } catch (FileNotFoundException ex) {
-            System.out.println("exception");
-        }
-        
+        scoreboardDisplayer();
+
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
@@ -61,23 +47,52 @@ public class EndScreen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        wonLabel = new javax.swing.JLabel();
+        restartButton = new javax.swing.JButton();
+        quitButton = new javax.swing.JButton();
+        nameField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        scoreboard = new javax.swing.JTextArea();
+        saveButton = new javax.swing.JButton();
+        nameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("You won!");
+        wonLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        wonLabel.setText("You won!");
 
-        jButton1.setText("Restart");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        restartButton.setText("Restart");
+        restartButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                restartButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Quit");
+        quitButton.setText("Quit");
+        quitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitButtonActionPerformed(evt);
+            }
+        });
+
+        nameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameFieldActionPerformed(evt);
+            }
+        });
+
+        scoreboard.setColumns(20);
+        scoreboard.setRows(5);
+        jScrollPane1.setViewportView(scoreboard);
+
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
+        nameLabel.setText("Name:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,33 +101,64 @@ public class EndScreen extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(124, 124, 124)
-                        .addComponent(jLabel1))
+                        .addGap(123, 123, 123)
+                        .addComponent(wonLabel))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(97, 97, 97)
-                        .addComponent(jButton1)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton2)))
-                .addContainerGap(125, Short.MAX_VALUE))
+                        .addGap(65, 65, 65)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(saveButton))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(93, 93, 93)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(nameLabel)
+                            .addComponent(restartButton))
+                        .addGap(68, 68, 68)
+                        .addComponent(quitButton)))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(wonLabel)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(28, 28, 28))
+                    .addComponent(saveButton)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameLabel))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(restartButton)
+                    .addComponent(quitButton))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void restartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartButtonActionPerformed
+        new Game().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_restartButtonActionPerformed
+
+    private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_nameFieldActionPerformed
+
+    private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_quitButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        scoreboardSaver("Name: " + nameField.getText() + " Dificulty: tobeadded" + " Time: ifpossible" + "\n");
+        scoreboardDisplayer();
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,17 +194,14 @@ public class EndScreen extends javax.swing.JFrame {
             }
         });
     }
-    private void scoreboardDisplayer() throws FileNotFoundException {
-        //scoreboard
-        //prihvashtane na faila za scorevoard-a
-        try {
-            File file = new File("src/Scoreboard/scoreboard.txt");
-            //pisane na poslednia pobeditel v scoreboarda
-            FileWriter fileWriter = new FileWriter(file.getPath(), true);
-            BufferedWriter out = new BufferedWriter(fileWriter);
-            out.write("Name: ****" + "Dificulty: ****" + "Time: ****" + "\n");
-            out.close();
 
+    private void scoreboardDisplayer(){
+        
+        try {
+            scoreboard.setText(null);
+            scoreboard.revalidate();
+            //prihvashtane na faila za scorevoard-a
+            File file = new File("src/Scoreboard/scoreboard.txt");
             //vzimane na poslednite 10 pobeditelia ot scoreboard-a i slagane v saotvetnia label
             BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
             int lines = 0;
@@ -171,21 +214,74 @@ public class EndScreen extends javax.swing.JFrame {
                 if (i > lines - 10) {
                     scoreboardText += reader.readLine();
                     scoreboardText += "\n";
+                    //instead of collecting the info from the file in string form
+                    //we should put into the newly created ScoreboardEntry class
+                    //then sort it and display it accordingly
+                    //!*!*! only the results for the relative dificulty should be displayed
+                    // a point system can be devised so as to not fully relly on time
                 } else {
                     reader.readLine();
                 }
             }
             reader.close();
         } catch (IOException e) {
-            System.out.println("Exception Occured:");
+            System.out.println("Exception occured while displaying scoreboard");
             e.printStackTrace();
         }
         scoreboard.setText(scoreboardText);
     }
 
+    private void scoreboardSaver(String toSave){
+        try {
+            File file = new File("src/Scoreboard/scoreboard.txt");
+            //pisane na poslednia pobeditel v scoreboarda
+            FileWriter fileWriter = new FileWriter(file.getPath(), true);
+            BufferedWriter out = new BufferedWriter(fileWriter);
+            out.write(toSave);
+            out.close();
+        } catch (IOException e) {
+            System.out.println("Exception occured while saving to scoreboard");
+            e.printStackTrace();
+        }
+    }
+    
+    private class ScoreboardEntry
+    {
+        private String name;
+        private int time;
+        //private DIFICULTY dificulty;
+
+        public ScoreboardEntry(String name, int time) {
+            this.name = name;
+            this.time = time;
+        }
+        
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getTime() {
+            return time;
+        }
+
+        public void setTime(int time) {
+            this.time = time;
+        }
+        
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField nameField;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JButton quitButton;
+    private javax.swing.JButton restartButton;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JTextArea scoreboard;
+    private javax.swing.JLabel wonLabel;
     // End of variables declaration//GEN-END:variables
 }
