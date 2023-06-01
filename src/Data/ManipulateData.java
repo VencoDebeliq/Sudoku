@@ -8,6 +8,16 @@ package Data;
  *
  * @author Ventsislav Peychev
  */
-public class GetData {
+public class ManipulateData extends Data {
+
+    @Override
+    public void collectData() {
+    
+    }
+
+    @Override
+    public void editData() {
+    
+    }
     
 }

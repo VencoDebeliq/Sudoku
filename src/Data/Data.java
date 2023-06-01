@@ -9,7 +9,7 @@ package Data;
  *
  * @author Ventsislav Peychev
  */
-public class Data {
+public abstract class Data {
     private String name;
     private int score;
 
@@ -40,6 +40,10 @@ public class Data {
         setName(name);
         setScore(score);
     }
+    
+    public abstract void collectData();
+    
+    public abstract void editData();
     
     @Override
     public String toString()
