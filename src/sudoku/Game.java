@@ -191,10 +191,8 @@ public class Game extends javax.swing.JFrame
         
         JLabel eraseLabel = new JLabel();
         eraseLabel = (JLabel) field[selectedFieldY][selectedFieldX].getComponent(0);
-        
-        if (eraseLabel.getText().equals("")) isNote = true;
+        if (eraseLabel.getText().equals("") || eraseLabel.getText().equals(" ")) isNote = true;
         else number = Integer.parseInt(eraseLabel.getText());
-        
         eraseLabel.setText("");
         eraseLabel.setVisible(false);
         eraseLabel.setForeground(Color.black);
@@ -257,11 +255,13 @@ public class Game extends javax.swing.JFrame
                     if (!action.isNote())
                     {
                         ((JLabel)field[y][x].getComponent(0)).setText(i + "");
+                        field[x][y].getComponent(0).setVisible(true);
                         if (!sudoku.isPlaceable(sudoku.getGrid(), x, y, i))
                             ((JLabel)field[y][x].getComponent(0)).setForeground(Color.red);
                         sudoku.setNumberAt(y, x, i);
                     }
-                    field[y][x].getComponent(i).setVisible(true);
+                    else
+                        field[y][x].getComponent(i).setVisible(true);
                 }
             }
         }
