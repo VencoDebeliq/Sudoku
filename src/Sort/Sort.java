@@ -4,12 +4,14 @@
  */
 package Sort;
 
+import Data.Data;
+
 /**
  *
  * @author Ventsislav Peychev
  */
 public abstract class Sort {
-    public static <T extends Integer> Object[] get(T[] arr)
+    public static <T extends Data> Object[] get(T[] arr)
     {
         Heap <T> h = new Heap<>();
         for (int i = 0; i < arr.length; ++i)
