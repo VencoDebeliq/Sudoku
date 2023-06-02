@@ -43,10 +43,6 @@ public class Action {
         this(-1, -1, new boolean[10], false, null);
     }
 
-    public static enum ActionType {
-        ADD, DELETE_NUMBER, DELETE_CELL
-    }
-
     // <editor-fold defaultstate="collapsed" desc="getters and setters">
     public void setNumberArr(boolean[] numberArr)
     {

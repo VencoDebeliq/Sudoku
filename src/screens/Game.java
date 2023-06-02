@@ -17,8 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.*;
-import javax.swing.JOptionPane;
 import javax.swing.border.Border;
+import stack.ActionType;
 import sudoku.Sudoku;
 import sudoku.SudokuLevels;
 
@@ -217,7 +217,7 @@ public class Game extends javax.swing.JFrame
         visibleNumbers[number] = true;
         
         actions.push(new Action(selectedFieldX, selectedFieldY, visibleNumbers,
-                isNote, Action.ActionType.DELETE_CELL));
+                isNote, ActionType.DELETE_CELL));
         
         //System.out.println(actions);
         
@@ -230,7 +230,7 @@ public class Game extends javax.swing.JFrame
         Action action = actions.peek();
         int x = action.getX();
         int y = action.getY();
-        if (action.getType() == Action.ActionType.ADD)
+        if (action.getType() == ActionType.ADD)
         {
             if (action.isNote())
             {
@@ -253,7 +253,7 @@ public class Game extends javax.swing.JFrame
                 sudoku.setNumberAt(y, x, 0);
             }
         }
-        else if (action.getType() == Action.ActionType.DELETE_CELL)
+        else if (action.getType() == ActionType.DELETE_CELL)
         {  
             boolean[] numbers = action.getNumberArr();
             for (int i = 0; i < numbers.length; ++i)
@@ -273,7 +273,7 @@ public class Game extends javax.swing.JFrame
                 }
             }
         }
-        else if (action.getType() == Action.ActionType.DELETE_NUMBER)
+        else if (action.getType() == ActionType.DELETE_NUMBER)
         {
             if (action.isNote())
             {
@@ -532,14 +532,14 @@ public class Game extends javax.swing.JFrame
         if (sudoku.getNumberAt(selectedFieldY, selectedFieldX) != 0) return;
         if (lblNotes.getText().equals("Off"))
         {
-            Action.ActionType actionT = Action.ActionType.ADD;
+            ActionType actionT = ActionType.ADD;
             boolean[] arr = new boolean[10];
             int i = 0;
             for (Component comp: field[selectedFieldY][selectedFieldX].getComponents())
             {
                 if (comp.isVisible() && i != 0)
                 {
-                    actionT = Action.ActionType.DELETE_NUMBER;
+                    actionT = ActionType.DELETE_NUMBER;
                     arr[i] = true;
                 }
                 comp.setVisible(false);
@@ -552,15 +552,15 @@ public class Game extends javax.swing.JFrame
                 number.setForeground(Color.red);
             sudoku.setNumberAt(selectedFieldY, selectedFieldX, Integer.parseInt(c + ""));
             
-            if (actionT == Action.ActionType.ADD)
+            if (actionT == ActionType.ADD)
             {
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                        false, Action.ActionType.ADD));
+                        false, ActionType.ADD));
             }
             else
             {
                 actions.push(new Action(selectedFieldX, selectedFieldY, arr,
-                        false, Action.ActionType.DELETE_NUMBER));
+                        false, ActionType.DELETE_NUMBER));
             }
             
             unselect();
@@ -573,13 +573,13 @@ public class Game extends javax.swing.JFrame
             {
                 smallNum.setVisible(false);
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                true, Action.ActionType.DELETE_NUMBER));
+                true, ActionType.DELETE_NUMBER));
             }
             else
             {
                 smallNum.setVisible(true);
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                true, Action.ActionType.ADD));
+                true, ActionType.ADD));
             }
         }
     }
