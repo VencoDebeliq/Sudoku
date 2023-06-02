@@ -7,7 +7,7 @@ package screens;
 
 
 import stack.Stack;
-import stack.Action;
+import action.Action;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -18,7 +18,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.*;
 import javax.swing.border.Border;
-import stack.ActionType;
+import action.ActionType;
 import sudoku.Sudoku;
 import sudoku.SudokuLevels;
 
