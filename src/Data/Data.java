@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import sudoku.SudokuLevels;
 
 /**
  *
@@ -32,15 +33,33 @@ public class Data implements ManipulateData
         try
         {    
             //prihvashtane na faila za scorevoard-a
-            File file = new File("src/Scoreboard/scoreboard.txt");
-            //vzimane na poslednite 10 pobeditelia ot scoreboard-a i slagane v saotvetnia label
+            File file = new File("src/Scoreboard/scoreboard.csv");
             BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
-            reader.mark(10000);
-            List <String> s = new LinkedList<>();
+            List<String> s = new LinkedList<>();
             s = reader.lines().collect(Collectors.toCollection(LinkedList::new));
-            for (String Line: s)
+            s.remove(0);
+            for (String line: s)
             {
-                user.add(new User(Line));
+                String []values = line.split(",");
+                User u = new User(values[0], Integer.parseInt(values[1]));
+                
+                switch (values[2])
+                {
+                    case "EASY":
+                        u.setDifficulty(SudokuLevels.EASY);
+                        break;
+                    case "MEDIUM":
+                        u.setDifficulty(SudokuLevels.MEDIUM);
+                        break;
+                    case "HARD":
+                        u.setDifficulty(SudokuLevels.HARD);
+                        break;
+                    case "EXPERT":
+                        u.setDifficulty(SudokuLevels.EXPERT);
+                        break;
+                }
+                
+                user.add(u);
             }
             reader.close();
         } 
@@ -54,13 +73,13 @@ public class Data implements ManipulateData
     @Override
     public void addData(String data)
     {
-        
+         
     }
 
     @Override
-    public List returnData() // to be finished
+    public List returnData()
     {
-        return null;
+        return user;
     }
     
     @Override
