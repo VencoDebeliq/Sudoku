@@ -1,4 +1,4 @@
-package sudoku;
+package screens;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,6 +19,8 @@ import javax.swing.BorderFactory;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
+import sudoku.Sudoku;
+import sudoku.SudokuLevels;
 
 
 /**

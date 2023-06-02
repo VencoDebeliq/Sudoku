@@ -4,7 +4,7 @@
  */
 package Main;
 
-import sudoku.Game;
+import screens.Game;
 
 /**
  *

@@ -4,20 +4,19 @@
  */
 package Data;
 
+import java.util.List;
+
 /**
  *
  * @author Ventsislav Peychev
  */
-public class ManipulateData extends Data {
+public interface ManipulateData {
 
-    @Override
-    public void collectData() {
-    
-    }
+    public void collectData();
 
-    @Override
-    public void editData() {
+    public void addData(String data);
+
+    public List returnData();
     
-    }
-    
+    public void saveData();
 }

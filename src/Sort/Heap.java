@@ -5,13 +5,13 @@
 package Sort;
 
 import java.util.*;
-import Data.Data;
+import Data.User;
 
 /**
  *
  * @author ventsislavlp
  */
-public class Heap <T extends Data>
+public class Heap <T extends User>
 {
     private Node <T> tree = new Node<>();
     private int size = 0;
@@ -102,7 +102,7 @@ public class Heap <T extends Data>
         return leftOrRight ? p.getLeft() : p.getRight();
     }
     
-    public static <P extends Data> Object[] sorted(Heap <P> h)
+    public static <P extends User> Object[] sorted(Heap <P> h)
     {
         Object arr[] = new Object[h.size()];
         int i = 0;
