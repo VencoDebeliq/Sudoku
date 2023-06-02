@@ -6,8 +6,8 @@ package screens;
  */
 
 
-import Stack.Stack;
-import Stack.Action;
+import stack.Stack;
+import stack.Action;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;

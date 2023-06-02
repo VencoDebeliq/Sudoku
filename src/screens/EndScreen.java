@@ -4,8 +4,8 @@
  */
 package screens;
 
-import Data.Data;
-import Data.User;
+import data.Data;
+import data.User;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.WindowConstants;
