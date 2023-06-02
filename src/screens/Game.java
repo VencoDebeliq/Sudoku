@@ -551,6 +551,8 @@ public class Game extends javax.swing.JFrame
             number.setVisible(true);
             if (!sudoku.isPlaceable(sudoku.getGrid(), selectedFieldX, selectedFieldY, (c - '0')))
                 number.setForeground(Color.red);
+            else
+                number.setForeground(Color.black);
             sudoku.setNumberAt(selectedFieldY, selectedFieldX, Integer.parseInt(c + ""));
             
             if (actionT == ActionType.ADD)
