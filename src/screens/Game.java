@@ -267,6 +267,7 @@ public class Game extends javax.swing.JFrame
                         if (!sudoku.isPlaceable(sudoku.getGrid(), x, y, i))
                             ((JLabel)field[y][x].getComponent(0)).setForeground(Color.red);
                         sudoku.setNumberAt(y, x, i);
+                        field[y][x].getComponent(0).setVisible(true);
                     }
                     else
                         field[y][x].getComponent(i).setVisible(true);
