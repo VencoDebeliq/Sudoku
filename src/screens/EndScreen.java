@@ -4,6 +4,7 @@
  */
 package screens;
 
+import Data.Data;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import javax.swing.WindowConstants;
 import sudoku.SudokuLevels;
 
@@ -22,6 +24,7 @@ import sudoku.SudokuLevels;
 public class EndScreen extends javax.swing.JFrame {
 
     private SudokuLevels dificulty;
+    private Data scoreboardData = new Data();
 
     public EndScreen(SudokuLevels dificulty) {
         this.dificulty = dificulty;
@@ -167,50 +170,14 @@ public class EndScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void scoreboardDisplayer() {
-        ScoreboardEntry[] allScores = null;
+        
         scoreboard.setText("");
         scoreboard.revalidate();
         String scoreboardText = "";
-        try {
-            //geting the scoreboard file
-            File file = new File("src/Scoreboard/scoreboard.txt");
-            //taking the 
-            BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
-            int lines = 0;
-            reader.mark(10000);
-            while (reader.readLine() != null) {
-                lines++;
-            }
-            reader.reset();
-            allScores = new ScoreboardEntry[lines];
-            for (int i = 0; i < lines; i++) {
-                if (i < lines) {
-                    //only the dificulty remains
-                    String temp = reader.readLine();
-                    allScores[i] = new ScoreboardEntry(statExtract(temp, "Name: ", " Dificulty:"),
-                            Integer.parseInt(statExtract(temp, "Time: ", " end")), 
-                            statExtract(temp, "Dificulty: ", " Time:"));
-                    //then sort it 
-                    //!*!*! only the results for the relative dificulty should be displayed
-                    // a point system can be devised so as to not fully relly on time
-                    //such as counting the number of erases * them by a const and adding them to time
-                    //and runing the result trough a sigmoid(x) = 1 / (1 + exp(-x))
-                    //then subtract that from 1 and multiplying by 100 for *big number = good feeling*
-                    //makes it very hard to get an extremly bad result and even the slightest improvement after that gives nice gains
-                    //achiving extremly high rezults is hard too and makes each mistake you make more punishing at the hardest level
-                    //the final score is also ajusted based on dificulty or only results from the same dificulty are shown
-                } else {
-                    reader.readLine();
-                }
-            }
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Exception occured while displaying scoreboard");
-            e.printStackTrace();
-        }
+        
 
         //compiling the stats from the ScoreboardEntry array and displaying them
-        for (ScoreboardEntry allScore : allScores) {
+        for (List allScore : scoreboardData.returnData()) {
             scoreboardText += "Name: " + allScore.getName() + " Dificulty: " +  dificulty.toString()  + " Time: " + allScore.getTime() + "\n";
         }
         scoreboard.setText(scoreboardText);
@@ -241,46 +208,6 @@ public class EndScreen extends javax.swing.JFrame {
         }
 
         return input.substring(startIndex + word1.length(), endIndex);
-    }
-
-    private class ScoreboardEntry {
-
-        private String name;
-        private String entryDificulty;
-        private int time;
-
-        public ScoreboardEntry(String name, int time, String entryDificulty) {
-            this.name = name;
-            this.time = time;
-            this.entryDificulty = entryDificulty;
-        }
-
-        // <editor-fold defaultstate="collapsed" desc="getters and setters">
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEntryDificulty() {
-            return entryDificulty;
-        }
-
-        public void setEntryDificulty(String entryDificulty) {
-            this.entryDificulty = entryDificulty;
-        }
-
-        public int getTime() {
-            return time;
-        }
-
-        public void setTime(int time) {
-            this.time = time;
-        }
-        // </editor-fold>
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
