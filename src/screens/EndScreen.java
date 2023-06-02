@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.WindowConstants;
+import sudoku.SudokuLevels;
 
 /**
  *
@@ -20,9 +21,11 @@ import javax.swing.WindowConstants;
  */
 public class EndScreen extends javax.swing.JFrame {
 
-    private String scoreboardText = "";
+    private SudokuLevels dificulty;
 
-    public EndScreen() {
+    public EndScreen(SudokuLevels dificulty) {
+        this.dificulty = dificulty;
+
         initComponents();
         this.setResizable(false);
         this.revalidate();
@@ -30,9 +33,12 @@ public class EndScreen extends javax.swing.JFrame {
 
         scoreboard.setEditable(false);
         scoreboard.setColumns(10);
-        scoreboard.setOpaque(true);
+        scoreboard.setOpaque(false);
         scoreboard.setForeground(Color.black);
         scoreboard.setFont(new Font("Fira Sans", Font.BOLD, 13));
+        
+        
+
         scoreboardDisplayer();
 
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -156,18 +162,19 @@ public class EndScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        scoreboardSaver("Name: " + nameField.getText() + " Dificulty: tobeadded" + " Time: ifpossible" + "\n");
+        scoreboardSaver("Name: " + nameField.getText() + " Dificulty: " + dificulty.toString() + " Time: 2 end" + "\n");
         scoreboardDisplayer();
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void scoreboardDisplayer(){
-        
+    private void scoreboardDisplayer() {
+        ScoreboardEntry[] allScores = null;
+        scoreboard.setText("");
+        scoreboard.revalidate();
+        String scoreboardText = "";
         try {
-            scoreboard.setText(null);
-            scoreboard.revalidate();
-            //prihvashtane na faila za scorevoard-a
+            //geting the scoreboard file
             File file = new File("src/Scoreboard/scoreboard.txt");
-            //vzimane na poslednite 10 pobeditelia ot scoreboard-a i slagane v saotvetnia label
+            //taking the 
             BufferedReader reader = new BufferedReader(new FileReader(file.getPath()));
             int lines = 0;
             reader.mark(10000);
@@ -175,15 +182,23 @@ public class EndScreen extends javax.swing.JFrame {
                 lines++;
             }
             reader.reset();
+            allScores = new ScoreboardEntry[lines];
             for (int i = 0; i < lines; i++) {
-                if (i > lines - 10) {
-                    scoreboardText += reader.readLine();
-                    scoreboardText += "\n";
-                    //instead of collecting the info from the file in string form
-                    //we should put into the newly created ScoreboardEntry class
-                    //then sort it and display it accordingly
+                if (i < lines) {
+                    //only the dificulty remains
+                    String temp = reader.readLine();
+                    allScores[i] = new ScoreboardEntry(statExtract(temp, "Name: ", " Dificulty:"),
+                            Integer.parseInt(statExtract(temp, "Time: ", " end")), 
+                            statExtract(temp, "Dificulty: ", " Time:"));
+                    //then sort it 
                     //!*!*! only the results for the relative dificulty should be displayed
                     // a point system can be devised so as to not fully relly on time
+                    //such as counting the number of erases * them by a const and adding them to time
+                    //and runing the result trough a sigmoid(x) = 1 / (1 + exp(-x))
+                    //then subtract that from 1 and multiplying by 100 for *big number = good feeling*
+                    //makes it very hard to get an extremly bad result and even the slightest improvement after that gives nice gains
+                    //achiving extremly high rezults is hard too and makes each mistake you make more punishing at the hardest level
+                    //the final score is also ajusted based on dificulty or only results from the same dificulty are shown
                 } else {
                     reader.readLine();
                 }
@@ -193,10 +208,16 @@ public class EndScreen extends javax.swing.JFrame {
             System.out.println("Exception occured while displaying scoreboard");
             e.printStackTrace();
         }
+
+        //compiling the stats from the ScoreboardEntry array and displaying them
+        for (ScoreboardEntry allScore : allScores) {
+            scoreboardText += "Name: " + allScore.getName() + " Dificulty: " +  dificulty.toString()  + " Time: " + allScore.getTime() + "\n";
+        }
         scoreboard.setText(scoreboardText);
+        scoreboard.setCaretPosition(0);
     }
 
-    private void scoreboardSaver(String toSave){
+    private void scoreboardSaver(String toSave) {
         try {
             File file = new File("src/Scoreboard/scoreboard.txt");
             //pisane na poslednia pobeditel v scoreboarda
@@ -209,24 +230,46 @@ public class EndScreen extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
-    private class ScoreboardEntry
-    {
-        private String name;
-        private int time;
-        //private DIFICULTY dificulty;
 
-        public ScoreboardEntry(String name, int time) {
+    public static String statExtract(String input, String word1, String word2) {
+        int startIndex = input.indexOf(word1);
+        int endIndex = input.indexOf(word2);
+
+        if (startIndex == -1 || endIndex == -1 || startIndex >= endIndex) {
+            System.out.println("String doesnt exist");
+            return "";
+        }
+
+        return input.substring(startIndex + word1.length(), endIndex);
+    }
+
+    private class ScoreboardEntry {
+
+        private String name;
+        private String entryDificulty;
+        private int time;
+
+        public ScoreboardEntry(String name, int time, String entryDificulty) {
             this.name = name;
             this.time = time;
+            this.entryDificulty = entryDificulty;
         }
-        
+
+        // <editor-fold defaultstate="collapsed" desc="getters and setters">
         public String getName() {
             return name;
         }
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public String getEntryDificulty() {
+            return entryDificulty;
+        }
+
+        public void setEntryDificulty(String entryDificulty) {
+            this.entryDificulty = entryDificulty;
         }
 
         public int getTime() {
@@ -236,7 +279,8 @@ public class EndScreen extends javax.swing.JFrame {
         public void setTime(int time) {
             this.time = time;
         }
-        
+        // </editor-fold>
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -33,6 +33,7 @@ public class Game extends javax.swing.JFrame
     private int selectedFieldX = -1; // keeps track of the X coordinate of the selected field
     private int selectedFieldY = -1; // keeps track of the Y coordinate of the selected field
     private Stack <Action> actions;
+    private static SudokuLevels currentDificulty = SudokuLevels.EASY;
     
     /**
      * Creates new form Game
@@ -592,15 +593,19 @@ public class Game extends javax.swing.JFrame
         {
             case "EASY":
                 sudoku = new Sudoku(SudokuLevels.EASY);
+                currentDificulty = SudokuLevels.EASY;
                 break;
             case "MEDIUM":
                 sudoku = new Sudoku(SudokuLevels.MEDIUM);
+                currentDificulty = SudokuLevels.MEDIUM;
                 break;
             case "HARD":
                 sudoku = new Sudoku(SudokuLevels.HARD);
+                currentDificulty = SudokuLevels.HARD;
                 break;
             case "EXPERT":
                 sudoku = new Sudoku(SudokuLevels.EXPERT);
+                currentDificulty = SudokuLevels.EXPERT;
                 break;
         }
         dispose();
@@ -631,8 +636,9 @@ public class Game extends javax.swing.JFrame
     {
         if (sudoku.isSolved())
         {
+            new EndScreen(currentDificulty);
             dispose();
-            JOptionPane.showMessageDialog(this, "Congratulations, you won!", "Good Game!", JOptionPane.PLAIN_MESSAGE);
+            //JOptionPane.showMessageDialog(this, "Congratulations, you won!", "Good Game!", JOptionPane.PLAIN_MESSAGE);
         }
     }
     
