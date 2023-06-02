@@ -14,9 +14,7 @@ public interface ManipulateData {
 
     public void collectData();
 
-    public void addData(String data);
+    public void saveData(String data);
 
     public List returnData();
-    
-    public void saveData();
 }

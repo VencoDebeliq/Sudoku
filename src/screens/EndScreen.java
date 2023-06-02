@@ -5,15 +5,9 @@
 package screens;
 
 import Data.Data;
+import Data.User;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
 import javax.swing.WindowConstants;
 import sudoku.SudokuLevels;
 
@@ -165,7 +159,7 @@ public class EndScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        scoreboardSaver("Name: " + nameField.getText() + " Dificulty: " + dificulty.toString() + " Time: 2 end" + "\n");
+        scoreboardData.saveData(nameField.getText() + "," + dificulty.toString() + "," + "0" + "\n");
         scoreboardDisplayer();
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -177,37 +171,24 @@ public class EndScreen extends javax.swing.JFrame {
         
 
         //compiling the stats from the ScoreboardEntry array and displaying them
-        for (List allScore : scoreboardData.returnData()) {
-            scoreboardText += "Name: " + allScore.getName() + " Dificulty: " +  dificulty.toString()  + " Time: " + allScore.getTime() + "\n";
+        for (User u: scoreboardData.returnData()) {
+            scoreboardText += "Name: " + u.getName() + " Dificulty: " +  u.getDifficulty() + " Score: " + u.getScore() + "\n";
         }
+        System.out.println(scoreboardText);
         scoreboard.setText(scoreboardText);
         scoreboard.setCaretPosition(0);
     }
+    
+    public double scoreCalculator(double time, double mistakes) {
+        time = 3000.0;
+        mistakes = 10.0;
+        double score;
+        score = time + mistakes * 5;
+        score = (1 - (1 / (1 + Math.exp(-0.001 * score)))) * 2.0;
+        score = score * 100.0;
+        System.out.println("Score = " + score);
 
-    private void scoreboardSaver(String toSave) {
-        try {
-            File file = new File("src/Scoreboard/scoreboard.txt");
-            //pisane na poslednia pobeditel v scoreboarda
-            FileWriter fileWriter = new FileWriter(file.getPath(), true);
-            BufferedWriter out = new BufferedWriter(fileWriter);
-            out.write(toSave);
-            out.close();
-        } catch (IOException e) {
-            System.out.println("Exception occured while saving to scoreboard");
-            e.printStackTrace();
-        }
-    }
-
-    public static String statExtract(String input, String word1, String word2) {
-        int startIndex = input.indexOf(word1);
-        int endIndex = input.indexOf(word2);
-
-        if (startIndex == -1 || endIndex == -1 || startIndex >= endIndex) {
-            System.out.println("String doesnt exist");
-            return "";
-        }
-
-        return input.substring(startIndex + word1.length(), endIndex);
+        return score;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

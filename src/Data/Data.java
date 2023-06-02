@@ -5,8 +5,10 @@
 package Data;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,26 +42,7 @@ public class Data implements ManipulateData
             s.remove(0);
             for (String line: s)
             {
-                String []values = line.split(",");
-                User u = new User(values[0], Integer.parseInt(values[1]));
-                
-                switch (values[2])
-                {
-                    case "EASY":
-                        u.setDifficulty(SudokuLevels.EASY);
-                        break;
-                    case "MEDIUM":
-                        u.setDifficulty(SudokuLevels.MEDIUM);
-                        break;
-                    case "HARD":
-                        u.setDifficulty(SudokuLevels.HARD);
-                        break;
-                    case "EXPERT":
-                        u.setDifficulty(SudokuLevels.EXPERT);
-                        break;
-                }
-                
-                user.add(u);
+                addToUser(line);
             }
             reader.close();
         } 
@@ -71,23 +54,50 @@ public class Data implements ManipulateData
     }
 
     @Override
-    public void addData(String data)
+    public void saveData(String toSave)
     {
-         
+        try {
+            File file = new File("src/Scoreboard/scoreboard.csv");
+            //pisane na poslednia pobeditel v scoreboarda
+            FileWriter fileWriter = new FileWriter(file.getPath(), true);
+            BufferedWriter out = new BufferedWriter(fileWriter);
+            out.write(toSave);
+            out.close();
+            addToUser(toSave);
+        } catch (IOException e) {
+            System.out.println("Exception occured while saving to scoreboard");
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public List returnData()
+    public List <User> returnData()
     {
         return user;
     }
     
-    @Override
-    public void saveData()
+    
+    private void addToUser(String line)
     {
-        
-    }
-    
-    
-    
+        String []values = line.split(",");
+        User u = new User(values[0], Integer.parseInt(values[2].trim()));
+
+        switch (values[1])
+        {
+            case "EASY":
+                u.setDifficulty(SudokuLevels.EASY);
+                break;
+            case "MEDIUM":
+                u.setDifficulty(SudokuLevels.MEDIUM);
+                break;
+            case "HARD":
+                u.setDifficulty(SudokuLevels.HARD);
+                break;
+            case "EXPERT":
+                u.setDifficulty(SudokuLevels.EXPERT);
+                break;
+        }
+
+        user.add(u);
+    }   
 }

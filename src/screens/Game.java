@@ -113,6 +113,11 @@ public class Game extends javax.swing.JFrame
         });
 
         btnHint.setText("Hint");
+        btnHint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHintActionPerformed(evt);
+            }
+        });
 
         tglBtnNotes.setText("Notes");
         tglBtnNotes.addActionListener(new java.awt.event.ActionListener() {
@@ -299,6 +304,11 @@ public class Game extends javax.swing.JFrame
         actions.pop();
         unselect();
     }//GEN-LAST:event_btnUndoActionPerformed
+
+    private void btnHintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHintActionPerformed
+        new EndScreen(currentDificulty).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnHintActionPerformed
 
     /*
      * This method is called from within the init method to initialize the field array.
@@ -636,9 +646,8 @@ public class Game extends javax.swing.JFrame
     {
         if (sudoku.isSolved())
         {
-            new EndScreen(currentDificulty);
+            new EndScreen(currentDificulty).setVisible(true);
             dispose();
-            //JOptionPane.showMessageDialog(this, "Congratulations, you won!", "Good Game!", JOptionPane.PLAIN_MESSAGE);
         }
     }
     
