@@ -9,6 +9,7 @@ import data.User;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.WindowConstants;
+import sort.Sort;
 import sudoku.SudokuLevels;
 
 /**
@@ -17,11 +18,11 @@ import sudoku.SudokuLevels;
  */
 public class EndScreen extends javax.swing.JFrame {
 
-    private SudokuLevels dificulty;
+    private SudokuLevels difficulty;
     private Data scoreboardData = new Data();
 
-    public EndScreen(SudokuLevels dificulty) {
-        this.dificulty = dificulty;
+    public EndScreen(SudokuLevels difficulty) {
+        this.difficulty = difficulty;
 
         initComponents();
         this.setResizable(false);
@@ -33,8 +34,8 @@ public class EndScreen extends javax.swing.JFrame {
         scoreboard.setOpaque(false);
         scoreboard.setForeground(Color.black);
         scoreboard.setFont(new Font("Fira Sans", Font.BOLD, 13));
-        
-        
+
+
 
         scoreboardDisplayer();
 
@@ -159,26 +160,27 @@ public class EndScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        scoreboardData.saveData(nameField.getText() + "," + dificulty.toString() + "," + "0" + "\n");
+        scoreboardData.saveData(nameField.getText() + "," + difficulty.toString() + "," + "0" + "\n");
         scoreboardDisplayer();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void scoreboardDisplayer() {
-        
+
         scoreboard.setText("");
         scoreboard.revalidate();
         String scoreboardText = "";
-        
+
+        System.out.println(scoreboardData.returnData());
 
         //compiling the stats from the ScoreboardEntry array and displaying them
-        for (User u: scoreboardData.returnData()) {
-            scoreboardText += "Name: " + u.getName() + " Dificulty: " +  u.getDifficulty() + " Score: " + u.getScore() + "\n";
+        for (User u: Sort.get(scoreboardData.returnData())) {
+            if (u.getDifficulty() == difficulty)
+            scoreboardText += "Name: " + u.getName() + " Difficulty: " +  u.getDifficulty() + " Score: " + u.getScore() + "\n";
         }
-        System.out.println(scoreboardText);
         scoreboard.setText(scoreboardText);
         scoreboard.setCaretPosition(0);
     }
-    
+
     public double scoreCalculator(double time, double mistakes) {
         time = 3000.0;
         mistakes = 10.0;

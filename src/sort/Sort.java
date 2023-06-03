@@ -5,18 +5,19 @@
 package sort;
 
 import data.User;
+import java.util.List;
 
 /**
  *
  * @author Ventsislav Peychev
  */
-public abstract class Sort {
-    public static <T extends User> Object[] get(T[] arr)
+public class Sort {
+    public static <T extends User> List <T> get(List <T> arr)
     {
         Heap <T> h = new Heap<>();
-        for (int i = 0; i < arr.length; ++i)
+        for (int i = 0; i < arr.size(); ++i)
         {
-            h.add(arr[i]);
+            h.add(arr.get(i));
         }
         return Heap.sorted(h);
     }

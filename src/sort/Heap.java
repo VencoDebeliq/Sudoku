@@ -48,7 +48,9 @@ public class Heap <T extends User>
         
         Node <T> next = pickAWay(curr);
         addPerform(value, next);
-        if (next.getValue().getScore() > curr.getValue().getScore())
+        if (next.getValue().getScore() > curr.getValue().getScore() ||
+                next.getValue().getScore() == curr.getValue().getScore() && 
+                next.getValue().getName().compareTo(curr.getValue().getName()) < 0)
         {
             T cp = next.getValue();
             next.setValue(curr.getValue());
@@ -87,6 +89,10 @@ public class Heap <T extends User>
         Node <T> max = 
                 (curr.getLeft().getValue().getScore() > curr.getRight().getValue().getScore()
                 ? curr.getLeft() 
+                : curr.getLeft().getValue().getScore() == curr.getRight().getValue().getScore()
+                ? curr.getLeft().getValue().getName().compareTo(curr.getRight().getValue().getName()) < 0
+                ? curr.getLeft()
+                : curr.getRight()
                 : curr.getRight());
         curr.setValue(max.getValue());
         popPerform(max);
@@ -102,13 +108,12 @@ public class Heap <T extends User>
         return leftOrRight ? p.getLeft() : p.getRight();
     }
     
-    public static <P extends User> Object[] sorted(Heap <P> h)
+    public static <P extends User> List <P> sorted(Heap <P> h)
     {
-        Object arr[] = new Object[h.size()];
-        int i = 0;
+        List <P> arr = new LinkedList<>();
         while (!h.isEmpty())
         {
-            arr[i++] = h.poll();
+            arr.add(h.poll());
         }
         return arr;
     }
