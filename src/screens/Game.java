@@ -4,8 +4,6 @@ package screens;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
-
 import stack.Stack;
 import action.Action;
 import java.awt.Color;
@@ -19,43 +17,50 @@ import javax.swing.BorderFactory;
 import javax.swing.*;
 import javax.swing.border.Border;
 import action.ActionType;
+import java.time.LocalTime;
 import sudoku.Sudoku;
 import sudoku.SudokuLevels;
-
 
 /**
  *
  * @author Ventsislav Peychev
  */
-public class Game extends javax.swing.JFrame
-{
+public class Game extends javax.swing.JFrame {
+
     private Sudoku sudoku = new Sudoku(SudokuLevels.EASY); // object from class Sudoku used for generating the puzzle
     private int selectedFieldX = -1; // keeps track of the X coordinate of the selected field
     private int selectedFieldY = -1; // keeps track of the Y coordinate of the selected field
-    private Stack <Action> actions;
-    private static SudokuLevels currentDificulty = SudokuLevels.EASY;
-    
+    private Stack<Action> actions;
+
+    //Score variables
+    private Sudoku solvedSudoku = new Sudoku();
+    private int mistakes;//number of mistakes to be passed to EndScreen
+    private static SudokuLevels currentDificulty = SudokuLevels.EASY; //difficulty to be passed to EndScreen
+    private int time; //time of start to be passed to EndScreen
+
     /**
      * Creates new form Game
      */
-    public Game()
-    {
+    public Game() {
         init();
     }
 
-    
     // <editor-fold defaultstate="collapsed" desc="Initialization">
     /**
-     * This method is called from within the constructor to initialize the fields and the form.
+     * This method is called from within the constructor to initialize the
+     * fields and the form.
      */
-    private void init()
-    {
+    private void init() {
+        //time of start
+        time = LocalTime.now().toSecondOfDay();
+        System.out.println("" + time);
+
         initComponents();
         initLevelPanels();
         initField();
         initNumbers();
         actions = new Stack<>();
-        
+
         tglBtnNotes.setFocusable(false);
         btnUndo.setFocusable(false);
         btnErase.setFocusable(false);
@@ -63,22 +68,21 @@ public class Game extends javax.swing.JFrame
         lblNotes.setFocusable(false);
         this.setFocusable(false);
         framePanel.setFocusable(false);
-        
+
         setLocationRelativeTo(null);
         setTitle("Sudoku");
-        
+
         int[][] grid = new int[9][9];
-        for (int i = 0; i < 9; ++i)
-        {
-            for (int j = 0; j < 9; ++j)
-            {
+        for (int i = 0; i < 9; ++i) {
+            for (int j = 0; j < 9; ++j) {
                 grid[i][j] = sudoku.getNumberAt(i, j);
             }
         }
         Sudoku.solve(grid);
+        solvedSudoku.setGrid(grid);
         Sudoku.print(grid);
     }
-    
+
     /**
      * This method is called from within the init method to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -91,7 +95,6 @@ public class Game extends javax.swing.JFrame
         framePanel = new javax.swing.JPanel();
         btnUndo = new javax.swing.JButton();
         btnErase = new javax.swing.JButton();
-        btnHint = new javax.swing.JButton();
         tglBtnNotes = new javax.swing.JToggleButton();
         lblNotes = new javax.swing.JLabel();
 
@@ -112,13 +115,6 @@ public class Game extends javax.swing.JFrame
             }
         });
 
-        btnHint.setText("Hint");
-        btnHint.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHintActionPerformed(evt);
-            }
-        });
-
         tglBtnNotes.setText("Notes");
         tglBtnNotes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -136,7 +132,6 @@ public class Game extends javax.swing.JFrame
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, framePanelLayout.createSequentialGroup()
                 .addContainerGap(732, Short.MAX_VALUE)
                 .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnHint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUndo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnErase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(tglBtnNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -155,9 +150,7 @@ public class Game extends javax.swing.JFrame
                 .addGroup(framePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tglBtnNotes)
                     .addComponent(lblNotes))
-                .addGap(111, 111, 111)
-                .addComponent(btnHint)
-                .addGap(170, 170, 170))
+                .addGap(306, 306, 306))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,125 +171,115 @@ public class Game extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
     private void tglBtnNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tglBtnNotesActionPerformed
-        if (tglBtnNotes.isSelected())
-        {
+        if (tglBtnNotes.isSelected()) {
             lblNotes.setText("On");
             lblNotes.setForeground(Color.green);
-        }
-        else
-        {
+        } else {
             lblNotes.setText("Off");
             lblNotes.setForeground(Color.red);
         }
     }//GEN-LAST:event_tglBtnNotesActionPerformed
 
     private void btnEraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEraseActionPerformed
-        if (selectedFieldX == -1 || selectedFieldY == -1) return;
-        if (field[selectedFieldY][selectedFieldX].getComponentCount() == 1) return;
-        
+        if (selectedFieldX == -1 || selectedFieldY == -1) {
+            return;
+        }
+        if (field[selectedFieldY][selectedFieldX].getComponentCount() == 1) {
+            return;
+        }
+
         boolean isNote = false;
         int number = 0;
-        
+
         JLabel eraseLabel = new JLabel();
         eraseLabel = (JLabel) field[selectedFieldY][selectedFieldX].getComponent(0);
-        if (eraseLabel.getText().equals("") || eraseLabel.getText().equals(" ")) isNote = true;
-        else number = Integer.parseInt(eraseLabel.getText());
+        if (eraseLabel.getText().equals("") || eraseLabel.getText().equals(" ")) {
+            isNote = true;
+        } else {
+            number = Integer.parseInt(eraseLabel.getText());
+        }
         eraseLabel.setText("");
         eraseLabel.setVisible(false);
         eraseLabel.setForeground(Color.black);
-        
+
         boolean visibleNumbers[] = new boolean[10];
         int i = 0;
-        
-        for(Component c : field[selectedFieldY][selectedFieldX].getComponents())
-        {
-            visibleNumbers[i++] = c.isVisible(); 
+
+        for (Component c : field[selectedFieldY][selectedFieldX].getComponents()) {
+            visibleNumbers[i++] = c.isVisible();
             c.setVisible(false);
         }
-        
+
         visibleNumbers[number] = true;
-        
+
         actions.push(new Action(selectedFieldX, selectedFieldY, visibleNumbers,
                 isNote, ActionType.DELETE_CELL));
-        
+
         //System.out.println(actions);
-        
         sudoku.setNumberAt(selectedFieldY, selectedFieldX, 0);
         unselect();
     }//GEN-LAST:event_btnEraseActionPerformed
 
     private void btnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUndoActionPerformed
-        if (actions.isEmpty()) return;
+        if (actions.isEmpty()) {
+            return;
+        }
         Action action = actions.peek();
         int x = action.getX();
         int y = action.getY();
-        if (action.getType() == ActionType.ADD)
-        {
-            if (action.isNote())
-            {
+        if (action.getType() == ActionType.ADD) {
+            if (action.isNote()) {
                 int i = 0;
                 int number = 0;
-                for (boolean b: action.getNumberArr())
-                {
-                    if (b)
+                for (boolean b : action.getNumberArr()) {
+                    if (b) {
                         number = i;
+                    }
                     ++i;
                 }
                 Component c = field[y][x].getComponent(number);
                 c.setVisible(false);
-            }
-            else
-            {
-                JLabel num = (JLabel)(field[y][x].getComponent(0));
+            } else {
+                JLabel num = (JLabel) (field[y][x].getComponent(0));
                 num.setText("");
                 num.setForeground(Color.black);
                 sudoku.setNumberAt(y, x, 0);
             }
-        }
-        else if (action.getType() == ActionType.DELETE_CELL)
-        {  
+        } else if (action.getType() == ActionType.DELETE_CELL) {
             boolean[] numbers = action.getNumberArr();
-            for (int i = 0; i < numbers.length; ++i)
-            {
-                if (numbers[i])
-                {
-                    if (!action.isNote())
-                    {
-                        ((JLabel)field[y][x].getComponent(0)).setText(i + "");
+            for (int i = 0; i < numbers.length; ++i) {
+                if (numbers[i]) {
+                    if (!action.isNote()) {
+                        ((JLabel) field[y][x].getComponent(0)).setText(i + "");
                         field[x][y].getComponent(0).setVisible(true);
-                        if (!sudoku.isPlaceable(sudoku.getGrid(), x, y, i))
-                            ((JLabel)field[y][x].getComponent(0)).setForeground(Color.red);
+                        if (!sudoku.isPlaceable(sudoku.getGrid(), x, y, i)) {
+                            ((JLabel) field[y][x].getComponent(0)).setForeground(Color.red);
+                        }
                         sudoku.setNumberAt(y, x, i);
                         field[y][x].getComponent(0).setVisible(true);
-                    }
-                    else
+                    } else {
                         field[y][x].getComponent(i).setVisible(true);
+                    }
                 }
             }
-        }
-        else if (action.getType() == ActionType.DELETE_NUMBER)
-        {
-            if (action.isNote())
-            {
+        } else if (action.getType() == ActionType.DELETE_NUMBER) {
+            if (action.isNote()) {
                 int i = 0;
                 int number = 0;
-                for (boolean b: action.getNumberArr())
-                {
-                    if (b) number = i;
+                for (boolean b : action.getNumberArr()) {
+                    if (b) {
+                        number = i;
+                    }
                     ++i;
                 }
                 field[y][x].getComponent(number).setVisible(true);
-            }
-            else
-            {
+            } else {
                 sudoku.setNumberAt(y, x, 0);
-                JLabel num = (JLabel)field[y][x].getComponent(0);
+                JLabel num = (JLabel) field[y][x].getComponent(0);
                 num.setText("");
                 boolean[] numbers = action.getNumberArr();
-                for (int i = 0; i < numbers.length; ++i)
-                {
-                    if (numbers[i])
-                    {
+                for (int i = 0; i < numbers.length; ++i) {
+                    if (numbers[i]) {
                         field[y][x].getComponent(i).setVisible(true);
                     }
                 }
@@ -306,24 +289,16 @@ public class Game extends javax.swing.JFrame
         unselect();
     }//GEN-LAST:event_btnUndoActionPerformed
 
-    private void btnHintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHintActionPerformed
-        new EndScreen(currentDificulty).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnHintActionPerformed
-
     /*
      * This method is called from within the init method to initialize the field array.
      */
-    private void initField()
-    {
+    private void initField() {
         field = new javax.swing.JPanel[Sudoku.GRID_SIZE][Sudoku.GRID_SIZE];
-        for (int i = 0; i < Sudoku.GRID_SIZE; ++i)
-        {
-            for (int j = 0; j < Sudoku.GRID_SIZE; ++j)
-            {
+        for (int i = 0; i < Sudoku.GRID_SIZE; ++i) {
+            for (int j = 0; j < Sudoku.GRID_SIZE; ++j) {
                 field[i][j] = new javax.swing.JPanel();
                 framePanel.add(field[i][j]);
-                
+
                 /**
                  * initializing the size and coordinates of each number field
                  * such that they have size 70 and are equally apart from the
@@ -333,11 +308,11 @@ public class Game extends javax.swing.JFrame
                 field[i][j].setBounds(65 + j * size, 100 + i * size, size, size);
                 field[i][j].setBackground(Color.white);
                 int thiknessSide = 3, thiknessNotSide = 1;
-                
-                /** 
+
+                /**
                  * setting the field borders such as the outlines and the lines
-                 * between the 3x3 sub grids are darker and thicker                
-                */
+                 * between the 3x3 sub grids are darker and thicker
+                 */
                 Border side = BorderFactory.createMatteBorder(
                         ((i % 3) == 0 ? thiknessSide : 0),
                         ((j % 3) == 0 ? thiknessSide : 0),
@@ -351,110 +326,109 @@ public class Game extends javax.swing.JFrame
                         (j == 8 ? 0 : thiknessNotSide),
                         Color.gray);
                 field[i][j].setBorder(BorderFactory.createCompoundBorder(side, notSide));
-                
+
                 /**
-                 * adding a label representing the number of each field and 
-                 * revealing the clues according to the level of the sudoku object
+                 * adding a label representing the number of each field and
+                 * revealing the clues according to the level of the sudoku
+                 * object
                  */
                 javax.swing.JLabel centralNumber;
                 centralNumber = new javax.swing.JLabel();
                 field[i][j].add(centralNumber);
                 centralNumber.setFont(new Font("", Font.PLAIN, 45));
-                if (sudoku.getNumberAt(i, j) != 0) 
+                if (sudoku.getNumberAt(i, j) != 0) {
                     centralNumber.setText(sudoku.getNumberAt(i, j) + "");
-                
+                }
+
                 /**
                  * creating effectively final variables
                  */
                 final int curri = i;
                 final int currj = j;
-                
+
                 /**
                  * adding mouseListener to each field handled in
                  * fieldMouseActionPerformed method
                  */
-                field[i][j].addMouseListener(new MouseAdapter()
-                {
+                field[i][j].addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mouseClicked(MouseEvent e)
-                    {
+                    public void mouseClicked(MouseEvent e) {
                         fieldMouseClickedActionPerformed(curri, currj, e);
                     }
-                    
+
                 });
-                
+
                 /**
                  * adding keyListener to each field handled in
                  * fieldKeyActionPerformed method
                  */
-                field[i][j].addKeyListener(new KeyAdapter()
-                {
+                field[i][j].addKeyListener(new KeyAdapter() {
                     @Override
-                    public void keyTyped(KeyEvent e)
-                    {
+                    public void keyTyped(KeyEvent e) {
                         fieldKeyActionPerformed(e);
                     }
                 });
                 field[i][j].setFocusable(true);
             }
         }
-        
+
     }
-    
-    private void initNumbers()
-    {
-        
-        for (int i = 0; i < Sudoku.GRID_SIZE; ++i)
-        {
-            for (int j = 0; j < Sudoku.GRID_SIZE; ++j)
-            {
-                if (sudoku.getNumberAt(i, j) != 0) continue;
-                for (int k = 0; k < 9; ++k)
-                {
+
+    private void initNumbers() {
+
+        for (int i = 0; i < Sudoku.GRID_SIZE; ++i) {
+            for (int j = 0; j < Sudoku.GRID_SIZE; ++j) {
+                if (sudoku.getNumberAt(i, j) != 0) {
+                    continue;
+                }
+                for (int k = 0; k < 9; ++k) {
                     javax.swing.JLabel number = new javax.swing.JLabel();
                     field[i][j].add(number);
                     number.setForeground(Color.gray);
                     number.setFont(new Font("", Font.PLAIN, 12));
-                    if (k == 0)
+                    if (k == 0) {
                         number.setText("" + (k + 1) + "");
-                    else
+                    } else {
                         number.setText("   " + (k + 1) + "");
+                    }
                     number.setVisible(false);
                 }
-                
+
             }
         }
     }
-    
-    private void initLevelPanels()
-    {
+
+    private void initLevelPanels() {
         javax.swing.JLabel txtDifficulty = new javax.swing.JLabel();
         framePanel.add(txtDifficulty);
         txtDifficulty.setBounds(70, 5, 100, 100);
         txtDifficulty.setFont(new Font("", Font.PLAIN, 20));
         txtDifficulty.setText("Difficulty:");
         txtDifficulty.setForeground(Color.gray);
-        
-        for (int i = 0; i < 4; ++i)
-        {
+
+        for (int i = 0; i < 4; ++i) {
             javax.swing.JPanel lvl = new javax.swing.JPanel();
             framePanel.add(lvl);
             int sizeY = 40;
             int sizeX = 100;
             lvl.setBounds(70 + (i + 1) * (sizeX + 30), 35, sizeX, sizeY);
-            
+
             javax.swing.JLabel txtLvl = new javax.swing.JLabel();
             lvl.add(txtLvl);
             txtLvl.setFont(new Font("", Font.PLAIN, 20));
-            if (i == 0) txtLvl.setText("EASY");
-            else if (i == 1) txtLvl.setText("MEDIUM");
-            else if (i == 2) txtLvl.setText("HARD");
-            else if (i == 3) txtLvl.setText("EXPERT");
-            
-            lvl.addMouseListener(new MouseAdapter(){
+            if (i == 0) {
+                txtLvl.setText("EASY");
+            } else if (i == 1) {
+                txtLvl.setText("MEDIUM");
+            } else if (i == 2) {
+                txtLvl.setText("HARD");
+            } else if (i == 3) {
+                txtLvl.setText("EXPERT");
+            }
+
+            lvl.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mousePressed(MouseEvent e)
-                {
+                public void mousePressed(MouseEvent e) {
                     difficultyMousePressedActionPerformed(lvl, e);
                 }
 
@@ -462,148 +436,146 @@ public class Game extends javax.swing.JFrame
                 public void mouseEntered(MouseEvent e) {
                     lvl.setBackground(new Color(203, 203, 203));
                 }
-                
+
                 @Override
-                public void mouseExited(MouseEvent e)
-                {
+                public void mouseExited(MouseEvent e) {
                     lvl.setBackground(new Color(238, 238, 238));
                 }
-                
+
             });
         }
     }
     // </editor-fold>
-    
+
     // <editor-fold defaultstate="collapsed" desc="Field Listeners">
     /**
-     * This method is called in the initialization methods in order to perform action after mouse is clicked.
-     * @param i used for representing the index of the row on which the panel was clicked
-     * @param j used for representing the index of the column on which the panel was clicked
+     * This method is called in the initialization methods in order to perform
+     * action after mouse is clicked.
+     *
+     * @param i used for representing the index of the row on which the panel
+     * was clicked
+     * @param j used for representing the index of the column on which the panel
+     * was clicked
      * @param e used for getting the MouseEvent that occurred
      */
-    private void fieldMouseClickedActionPerformed(int i, int j, MouseEvent e)
-    {
-        if (e.getButton() != 1) return;
-        
+    private void fieldMouseClickedActionPerformed(int i, int j, MouseEvent e) {
+        if (e.getButton() != 1) {
+            return;
+        }
+
         int boxI = i - i % 3, boxJ = j - j % 3;
-        
+
         unselect();
-        
-        for (int row = boxI; row < boxI + 3; ++row)
-        {
-            for (int col = boxJ; col < boxJ + 3; ++col)
-            {
+
+        for (int row = boxI; row < boxI + 3; ++row) {
+            for (int col = boxJ; col < boxJ + 3; ++col) {
                 field[row][col].setBackground(new Color(230, 248, 255)); // Alice Blue color
             }
         }
-        
-        for (int row = 0; row < Sudoku.GRID_SIZE; ++row)
-        {
-            for (int col = 0; col < Sudoku.GRID_SIZE; ++col)
-            {
-                String currNum = ((javax.swing.JLabel)field[row][col].getComponent(0)).getText();
-                String pressedNum = ((javax.swing.JLabel)field[i][j].getComponent(0)).getText();
-                if (currNum.equals(pressedNum) && !currNum.equals(""))
-                {
+
+        for (int row = 0; row < Sudoku.GRID_SIZE; ++row) {
+            for (int col = 0; col < Sudoku.GRID_SIZE; ++col) {
+                String currNum = ((javax.swing.JLabel) field[row][col].getComponent(0)).getText();
+                String pressedNum = ((javax.swing.JLabel) field[i][j].getComponent(0)).getText();
+                if (currNum.equals(pressedNum) && !currNum.equals("")) {
                     field[row][col].setBackground(new Color(155, 221, 255));
                 }
             }
         }
-        
-        for (int k = 0; k < 9; ++k)
-        {
+
+        for (int k = 0; k < 9; ++k) {
             field[i][k].setBackground(new Color(230, 248, 255));
             field[k][j].setBackground(new Color(230, 248, 255));
         }
         field[i][j].setBackground(new Color(102, 153, 204)); // Columbia Blue color
-        
+
         selectedFieldX = j;
         selectedFieldY = i;
     }
 
     /**
-     * This method is called in the initialization methods in order to perform action after a key is typed
+     * This method is called in the initialization methods in order to perform
+     * action after a key is typed
+     *
      * @param e used for getting the pressed Key's Character
      */
-    private void fieldKeyActionPerformed(KeyEvent e)
-    {
-        if (selectedFieldX == -1 || selectedFieldY == -1) return;
+    private void fieldKeyActionPerformed(KeyEvent e) {
+        if (selectedFieldX == -1 || selectedFieldY == -1) {
+            return;
+        }
         char c = e.getKeyChar();
-        if (c < '1' || c > '9') return;
-        if (sudoku.getNumberAt(selectedFieldY, selectedFieldX) != 0) return;
-        if (lblNotes.getText().equals("Off"))
-        {
+        if (c < '1' || c > '9') {
+            return;
+        }
+        if (sudoku.getNumberAt(selectedFieldY, selectedFieldX) != 0) {
+            return;
+        }
+        if (lblNotes.getText().equals("Off")) {
             ActionType actionT = ActionType.ADD;
             boolean[] arr = new boolean[10];
             int i = 0;
-            for (Component comp: field[selectedFieldY][selectedFieldX].getComponents())
-            {
-                if (comp.isVisible() && i != 0)
-                {
+            for (Component comp : field[selectedFieldY][selectedFieldX].getComponents()) {
+                if (comp.isVisible() && i != 0) {
                     actionT = ActionType.DELETE_NUMBER;
                     arr[i] = true;
                 }
                 comp.setVisible(false);
                 i++;
             }
-            javax.swing.JLabel number = (javax.swing.JLabel)field[selectedFieldY][selectedFieldX].getComponent(0);
+            javax.swing.JLabel number = (javax.swing.JLabel) field[selectedFieldY][selectedFieldX].getComponent(0);
             number.setText(c + "");
             number.setVisible(true);
-            if (!sudoku.isPlaceable(sudoku.getGrid(), selectedFieldX, selectedFieldY, (c - '0')))
+            if (!sudoku.isPlaceable(sudoku.getGrid(), selectedFieldX, selectedFieldY, (c - '0'))) {
                 number.setForeground(Color.red);
-            else
+            } else {
                 number.setForeground(Color.black);
+            }
             sudoku.setNumberAt(selectedFieldY, selectedFieldX, Integer.parseInt(c + ""));
-            
-            if (actionT == ActionType.ADD)
-            {
+            if (Integer.parseInt(c + "") != solvedSudoku.getNumberAt(selectedFieldY, selectedFieldX)) {
+                System.out.println(Integer.parseInt(c + "") + " is wrong");
+                mistakes++;
+            }
+
+            if (actionT == ActionType.ADD) {
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
                         false, ActionType.ADD));
-            }
-            else
-            {
+            } else {
                 actions.push(new Action(selectedFieldX, selectedFieldY, arr,
                         false, ActionType.DELETE_NUMBER));
             }
-            
+
             unselect();
             checkIfWon();
-        }
-        else
-        {
-            javax.swing.JLabel smallNum = (javax.swing.JLabel)field[selectedFieldY][selectedFieldX].getComponent(c - '0');
-            if (smallNum.isVisible())
-            {
+        } else {
+            javax.swing.JLabel smallNum = (javax.swing.JLabel) field[selectedFieldY][selectedFieldX].getComponent(c - '0');
+            if (smallNum.isVisible()) {
                 smallNum.setVisible(false);
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                true, ActionType.DELETE_NUMBER));
-            }
-            else
-            {
+                        true, ActionType.DELETE_NUMBER));
+            } else {
                 smallNum.setVisible(true);
                 actions.push(new Action(selectedFieldX, selectedFieldY, (c - '0'), true,
-                true, ActionType.ADD));
+                        true, ActionType.ADD));
             }
         }
     }
 
     /**
-     * This method is called in the initialization methods in order to perform action after mouse is pressed.
+     * This method is called in the initialization methods in order to perform
+     * action after mouse is pressed.
+     *
      * @param lvl indicates which level panel was clicked
      * @param e indicates the click type
      */
-    private void difficultyMousePressedActionPerformed(javax.swing.JPanel lvl, MouseEvent e)
-    {
-        for (int i = 6; i < 10; ++i)
-        {
-            javax.swing.JPanel lvli = (javax.swing.JPanel)framePanel.getComponent(i);
-            javax.swing.JLabel txtLvl = (javax.swing.JLabel)lvli.getComponent(0);
+    private void difficultyMousePressedActionPerformed(javax.swing.JPanel lvl, MouseEvent e) {
+        for (int i = 6; i < 10; ++i) {
+            javax.swing.JPanel lvli = (javax.swing.JPanel) framePanel.getComponent(i);
+            javax.swing.JLabel txtLvl = (javax.swing.JLabel) lvli.getComponent(0);
             txtLvl.setForeground(Color.black);
         }
-        javax.swing.JLabel txtLvl = (javax.swing.JLabel)lvl.getComponent(0);
+        javax.swing.JLabel txtLvl = (javax.swing.JLabel) lvl.getComponent(0);
         txtLvl.setForeground(Color.BLUE);
-        switch (txtLvl.getText())
-        {
+        switch (txtLvl.getText()) {
             case "EASY":
                 sudoku = new Sudoku(SudokuLevels.EASY);
                 currentDificulty = SudokuLevels.EASY;
@@ -624,39 +596,33 @@ public class Game extends javax.swing.JFrame
         dispose();
         new Game().setVisible(true);
     }
-    
-    // </editor-fold>
 
+    // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Unselect field">
     /**
-     * This method is called whenever the field needs to deselect the previously selected field(s)
+     * This method is called whenever the field needs to deselect the previously
+     * selected field(s)
      */
-    private void unselect()
-    {
+    private void unselect() {
         selectedFieldX = -1;
         selectedFieldY = -1;
-        for (int row = 0; row < 9; ++row)
-        {
-            for (int col = 0; col < 9; ++col)
-            {
+        for (int row = 0; row < 9; ++row) {
+            for (int col = 0; col < 9; ++col) {
                 field[row][col].setBackground(Color.white);
             }
         }
     }
     // </editor-fold>
-    
-    private void checkIfWon()
-    {
-        if (sudoku.isSolved())
-        {
-            new EndScreen(currentDificulty).setVisible(true);
+
+    private void checkIfWon() {
+        if (sudoku.isSolved()) {
+            new EndScreen(currentDificulty, LocalTime.now().toSecondOfDay() - time, mistakes).setVisible(true);
             dispose();
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnErase;
-    private javax.swing.JButton btnHint;
     private javax.swing.JButton btnUndo;
     private javax.swing.JPanel framePanel;
     private javax.swing.JLabel lblNotes;

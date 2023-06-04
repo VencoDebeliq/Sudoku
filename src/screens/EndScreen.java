@@ -8,6 +8,11 @@ import data.Data;
 import data.User;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import sort.Sort;
 import sudoku.SudokuLevels;
@@ -20,22 +25,24 @@ public class EndScreen extends javax.swing.JFrame {
 
     private SudokuLevels difficulty;
     private Data scoreboardData = new Data();
+    private int score;
 
-    public EndScreen(SudokuLevels difficulty) {
+    public EndScreen(SudokuLevels difficulty, double time, int mistakes) {
         this.difficulty = difficulty;
 
+        System.out.println("" + mistakes);
         initComponents();
         this.setResizable(false);
+        this.setTitle("Sudoku");
         this.revalidate();
         setLocationRelativeTo(null);
 
+        score = (int) scoreCalculator(time, mistakes);
         scoreboard.setEditable(false);
         scoreboard.setColumns(10);
         scoreboard.setOpaque(false);
         scoreboard.setForeground(Color.black);
-        scoreboard.setFont(new Font("Fira Sans", Font.BOLD, 13));
-
-
+        scoreboard.setFont(new Font("Fira Sans", Font.BOLD, 13)); 
 
         scoreboardDisplayer();
 
@@ -52,18 +59,24 @@ public class EndScreen extends javax.swing.JFrame {
     private void initComponents() {
 
         wonLabel = new javax.swing.JLabel();
-        restartButton = new javax.swing.JButton();
-        quitButton = new javax.swing.JButton();
-        nameField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         scoreboard = new javax.swing.JTextArea();
-        saveButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        restartButton = new javax.swing.JButton();
+        quitButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         nameLabel = new javax.swing.JLabel();
+        nameField = new javax.swing.JTextField();
+        saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         wonLabel.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         wonLabel.setText("You won!");
+
+        scoreboard.setColumns(20);
+        scoreboard.setRows(5);
+        jScrollPane1.setViewportView(scoreboard);
 
         restartButton.setText("Restart");
         restartButton.addActionListener(new java.awt.event.ActionListener() {
@@ -79,15 +92,33 @@ public class EndScreen extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(restartButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addComponent(quitButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(restartButton)
+                    .addComponent(quitButton))
+                .addGap(41, 41, 41))
+        );
+
+        nameLabel.setText("Name:");
+
         nameField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameFieldActionPerformed(evt);
             }
         });
-
-        scoreboard.setColumns(20);
-        scoreboard.setRows(5);
-        jScrollPane1.setViewportView(scoreboard);
 
         saveButton.setText("Save");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -96,50 +127,63 @@ public class EndScreen extends javax.swing.JFrame {
             }
         });
 
-        nameLabel.setText("Name:");
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(nameLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(saveButton)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveButton)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameLabel)))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
-                        .addComponent(wonLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(saveButton))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nameLabel)
-                            .addComponent(restartButton))
-                        .addGap(68, 68, 68)
-                        .addComponent(quitButton)))
-                .addContainerGap(70, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 56, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(104, 104, 104)
+                .addComponent(wonLabel)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(6, 6, 6)
                 .addComponent(wonLabel)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(saveButton)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(restartButton)
-                    .addComponent(quitButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -160,8 +204,20 @@ public class EndScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        scoreboardData.saveData(nameField.getText() + "," + difficulty.toString() + "," + "0" + "\n");
+        scoreboardData.saveData(nameField.getText() + "," + difficulty.toString() + "," + score + "\n");
         scoreboardDisplayer();
+        nameField.setVisible(false);
+        saveButton.setVisible(false);
+
+        int rank = 0;
+        for (User u : Sort.get(scoreboardData.returnData())) {
+            if (u.getDifficulty() == difficulty) {
+                rank++;
+                if (u.getName().equals(nameField.getText())) {
+                    nameLabel.setText("Score saved! You rank: " + rank + " in the " + difficulty.toString() + " difficulty");
+                }
+            }
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void scoreboardDisplayer() {
@@ -173,27 +229,34 @@ public class EndScreen extends javax.swing.JFrame {
         System.out.println(scoreboardData.returnData());
 
         //compiling the stats from the ScoreboardEntry array and displaying them
-        for (User u: Sort.get(scoreboardData.returnData())) {
-            if (u.getDifficulty() == difficulty)
-            scoreboardText += "Name: " + u.getName() + " Difficulty: " +  u.getDifficulty() + " Score: " + u.getScore() + "\n";
+        int rank = 0;
+        for (User u : Sort.get(scoreboardData.returnData())) {
+            if (u.getDifficulty() == difficulty) {
+                rank++;
+                scoreboardText += rank + "." + "Name: " + u.getName() + " Difficulty: " + u.getDifficulty() + " Score: " + u.getScore() + "\n";
+                if(rank >= 10)
+                {
+                    break;
+                }
+            }
         }
         scoreboard.setText(scoreboardText);
         scoreboard.setCaretPosition(0);
     }
 
     public double scoreCalculator(double time, double mistakes) {
-        time = 3000.0;
-        mistakes = 10.0;
         double score;
         score = time + mistakes * 5;
         score = (1 - (1 / (1 + Math.exp(-0.001 * score)))) * 2.0;
-        score = score * 100.0;
+        score = score * 100.0 + 1;
         System.out.println("Score = " + score);
 
         return score;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;

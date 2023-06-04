@@ -46,7 +46,6 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="732" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnHint" max="32767" attributes="0"/>
                       <Component id="btnUndo" max="32767" attributes="0"/>
                       <Component id="btnErase" max="32767" attributes="0"/>
                       <Component id="tglBtnNotes" alignment="0" max="32767" attributes="0"/>
@@ -69,9 +68,7 @@
                       <Component id="tglBtnNotes" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblNotes" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
-                  <Component id="btnHint" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="170" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="306" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -91,14 +88,6 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEraseActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnHint">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Hint"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHintActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JToggleButton" name="tglBtnNotes">
