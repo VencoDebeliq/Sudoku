@@ -64,7 +64,6 @@ public class Game extends javax.swing.JFrame {
         tglBtnNotes.setFocusable(false);
         btnUndo.setFocusable(false);
         btnErase.setFocusable(false);
-        btnHint.setFocusable(false);
         lblNotes.setFocusable(false);
         this.setFocusable(false);
         framePanel.setFocusable(false);
