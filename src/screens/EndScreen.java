@@ -9,6 +9,7 @@ import data.User;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -255,7 +256,8 @@ public class EndScreen extends javax.swing.JFrame {
     private boolean isUsernameValid(String username)
     {
         Pattern p = Pattern.compile("\\w+");
-        return p.asPredicate().equals(username);
+        Matcher m = p.matcher(username);
+        return m.matches();
     }
     
     private double scoreCalculator(double time, double mistakes) {
