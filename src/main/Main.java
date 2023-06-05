@@ -6,7 +6,6 @@ package main;
 
 import screens.EndScreen;
 import screens.Game;
-import sudoku.SudokuLevels;
 
 /**
  *
@@ -20,6 +19,5 @@ public class Main
     public static void main(String[] args)
     {
         new Game().setVisible(true);
-        new EndScreen(SudokuLevels.EASY, 0, 0).setVisible(true);
     }
 }
